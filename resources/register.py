@@ -46,7 +46,7 @@ class UserRegisterResource(Resource) :
            
             # 2. 쿼리문 만들고
             query = '''insert into user
-                        (email, name, password,)
+                        (email, name, password)
                         values
                         (%s, %s, %s);'''
             # 파이썬에서, 튜플만들때, 데이터가 1개인 경우에는 콤마를 꼭
