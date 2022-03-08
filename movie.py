@@ -174,7 +174,7 @@ class FavoriteListResource(Resource):
         try :
             connection = get_connection()
 
-            query = '''select m.poster 
+            query = '''select f.id as favorite_id,f.movie_id,f.user_id,m.poster 
                         from movie m
                         join favorite f
                         on f.movie_id = m.id and f.user_id = %s
