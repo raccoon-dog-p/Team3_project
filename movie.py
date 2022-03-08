@@ -136,7 +136,7 @@ class AddFavoriteResource(Resource):
             connection = get_connection()
             
             # 2. 쿼리문 만들고
-            query = '''insert into select
+            query = '''insert into favorite
                         (user_id,movie_id)
                         values
                         (%s,%s);'''
@@ -162,6 +162,56 @@ class AddFavoriteResource(Resource):
         
         return {'result':'추가 완료'}
     
+class FavoriteListResource(Resource):
+    @jwt_required()
+    def get(self):
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+        
+        
+        user_id = get_jwt_identity()
+        
+        try :
+            connection = get_connection()
+
+            query = '''select m.poster 
+                        from movie m
+                        join favorite f
+                        on f.movie_id = m.id and f.user_id = %s
+                        limit '''+offset+','+limit+''';'''
+            
+            param = (user_id,)
+            
+            cursor = connection.cursor(dictionary = True)
+            
+            cursor.execute(query,param)
+            
+            # select 문은 아래 내용이 필요하다.
+            record_list = cursor.fetchall()
+            print(record_list)
+            
+            ### 중요. 파이썬의 시간을, JSON으로 보내기 위해서
+            ### 문자열로 바꿔준다.
+            # i = 0
+            # for record in record_list :
+            #     record_list[i]['avg'] = str(record['avg'])
+                
+            #     i = i+1
+        # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
+        except Error as e  : 
+            print('Error while connecting to MySQL',e)
+            return {'error':str(e)},HTTPStatus.BAD_REQUEST
+        # finally 는 try에서 에러가 나든 안나든, 무조건 실행하라는 뜻.    
+        finally :
+            cursor.close()
+            if connection.is_connected():
+                connection.close()
+                print('MySQL connection is closed')
+            else:
+                print('connection does not exist')
+        
+        return {'count':len(record_list),'result':record_list}
+
 class DeleteFavoriteResource(Resource):
     @jwt_required
     def delete(self,movie_id):
@@ -173,7 +223,7 @@ class DeleteFavoriteResource(Resource):
             connection = get_connection()
             
             # 2. 쿼리문 만들고
-            query = '''delete from select
+            query = '''delete from favorite
                         where movie_id = %s and user_id = %s;'''
             # 파이썬에서, 튜플만들때, 데이터가 1개인 경우에는
             # 콤마를 꼭 써준다
