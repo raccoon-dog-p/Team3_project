@@ -9,6 +9,73 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 import pandas as pd
 
+class MovieListResource(Resource):
+    def get(self):
+        provider=request.args.get('provider')
+        # 넷플릭스,왓챠,웨이브,prv,dnp
+        
+        try :
+            connection = get_connection()
+
+            if provider == '넷플릭스' :
+            
+                query = '''select poster
+                            from movie
+                            where provider = '넷플릭스';'''
+            
+            elif provider == '왓챠' :
+                query = '''select poster
+                            from movie
+                            where provider = '왓챠';'''
+                            
+            elif provider == '웨이브' :
+                query = '''select poster
+                            from movie
+                            where provider = '웨이브';'''
+                            
+            elif provider == 'prv' :
+                query = '''select poster
+                            from movie
+                            where provider = 'prv';'''
+                            
+            elif provider == 'dnp' :
+                query = '''select poster
+                            from movie
+                            where provider = 'dnp';'''
+            
+            
+            cursor = connection.cursor(dictionary = True)
+            
+            cursor.execute(query)
+            
+            # select 문은 아래 내용이 필요하다.
+            record_list = cursor.fetchall()
+            print(record_list)
+            
+            ### 중요. 파이썬의 시간을, JSON으로 보내기 위해서
+            ### 문자열로 바꿔준다.
+            # i = 0
+            # for record in record_list :
+            #     record_list[i]['avg'] = str(record['avg'])
+                
+            #     i = i+1
+        # 위의 코드를 실행하다가, 문제가 생기면, except를 실행하라는 뜻.
+        except Error as e  : 
+            print('Error while connecting to MySQL',e)
+            return {'error':str(e)},HTTPStatus.BAD_REQUEST
+        # finally 는 try에서 에러가 나든 안나든, 무조건 실행하라는 뜻.    
+        finally :
+            cursor.close()
+            if connection.is_connected():
+                connection.close()
+                print('MySQL connection is closed')
+            else:
+                print('connection does not exist')
+        
+        
+        return {'count':len(record_list),'movie_list':record_list}  
+        
+
 class MovieSearchResource(Resource):
     
     def get(self):
@@ -56,6 +123,7 @@ class MovieSearchResource(Resource):
             
         return {'count':len(record_list), 'result':record_list}
     
+
     
 class AddFavoriteResource(Resource):
     @jwt_required()
