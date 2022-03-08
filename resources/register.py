@@ -51,8 +51,8 @@ class UserRegisterResource(Resource) :
                         (%s, %s, %s);'''
             # 파이썬에서, 튜플만들때, 데이터가 1개인 경우에는 콤마를 꼭
             # 써준다.
-            record = (data['email'], hashed_password, 
-                        data['name'])
+            record = (data['email'], data['name'],hashed_password, 
+                        )
             
             # 3. 커넥션으로부터 커서를 가져온다.
             cursor = connection.cursor()
