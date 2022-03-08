@@ -20,27 +20,27 @@ class MovieListResource(Resource):
             if provider == '넷플릭스' :
             
                 query = '''select poster
-                            from movie
+                            from movie_2
                             where provider = '넷플릭스';'''
             
             elif provider == '왓챠' :
                 query = '''select poster
-                            from movie
+                            from movie_2
                             where provider = '왓챠';'''
                             
             elif provider == '웨이브' :
                 query = '''select poster
-                            from movie
+                            from movie_2
                             where provider = '웨이브';'''
                             
             elif provider == 'prv' :
                 query = '''select poster
-                            from movie
+                            from movie_2
                             where provider = 'prv';'''
                             
             elif provider == 'dnp' :
                 query = '''select poster
-                            from movie
+                            from movie_2
                             where provider = 'dnp';'''
             
             
@@ -81,7 +81,7 @@ class MovieInfoResource(Resource):
             connection = get_connection()
 
             query = '''select id,title,short_description,genre_ids,release_year,urls,poster,provider
-                        from movie
+                        from movie_2
                         where id = %s;'''
             
             param = (movie_id,)
@@ -128,7 +128,7 @@ class MovieSearchResource(Resource):
             connection = get_connection()
 
             query = '''select title,release_year,urls,poster,provider
-                        from movie
+                        from movie_2
                         where title like %s
                         limit '''+offset+','+limit+''';'''
             
@@ -216,7 +216,7 @@ class FavoriteListResource(Resource):
             connection = get_connection()
 
             query = '''select f.id as favorite_id,f.movie_id,f.user_id,m.poster 
-                        from movie m
+                        from movie_2 m
                         join favorite f
                         on f.movie_id = m.id and f.user_id = %s
                         limit '''+offset+','+limit+''';'''
