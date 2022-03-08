@@ -6,7 +6,7 @@ from http import HTTPStatus
 
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from movie import AddFavoriteResource, DeleteFavoriteResource, MovieSearchResource
+from movie import AddFavoriteResource, DeleteFavoriteResource, FavoriteListResource, MovieInfoResource, MovieListResource, MovieSearchResource
 from resources.login import UserLoginResource
 from resources.register import UserRegisterResource
 from resources.logout import UserLogoutResource, jwt_blacklist
@@ -32,8 +32,11 @@ api = Api(app)
 api.add_resource(UserRegisterResource, '/api/register')
 api.add_resource(UserLoginResource, '/api/login')
 api.add_resource(UserLogoutResource, '/api/v1/user/logout')
+api.add_resource(MovieListResource,'/api/movie')
+api.add_resource(MovieInfoResource,'/5/<int:movie_id>')
 api.add_resource(MovieSearchResource,'/1')
 api.add_resource(AddFavoriteResource,'/2/<int:movie_id>')
+api.add_resource(FavoriteListResource,'/4')
 api.add_resource(DeleteFavoriteResource,'/3/<int:movie_id>')
 
 if __name__ == '__main__' :
