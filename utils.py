@@ -16,6 +16,3 @@ def check_password(password, hashed) :
     return pbkdf2_sha256.verify(password+salt, hashed)
 
 
-## commit test
-def test():
-    test=test1
