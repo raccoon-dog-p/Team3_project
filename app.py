@@ -5,7 +5,8 @@ from flask.json import jsonify
 from http import HTTPStatus
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from movie import AddFavoriteResource, DeleteFavoriteResource, MovieSearchResource
+from resources.movie import AddFavoriteResource, DeleteFavoriteResource, MovieSearchResource
+from resources.home import HomePosterResource
 from resources.login import UserLoginResource
 from resources.rating import MovieRecommandResource
 from resources.register import UserRegisterResource
@@ -36,6 +37,7 @@ api.add_resource(MovieSearchResource,'/1')
 api.add_resource(AddFavoriteResource,'/2/<int:movie_id>')
 api.add_resource(DeleteFavoriteResource,'/3/<int:movie_id>')
 api.add_resource(MovieRecommandResource,'/4')
+api.add_resource(HomePosterResource,'/home')
 
 if __name__ == '__main__' :
     app.run()
